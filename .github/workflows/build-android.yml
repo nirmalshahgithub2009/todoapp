@@ -1,0 +1,31 @@
+# The goal of this action is to compile the Android debug build. That should
+# tell us automatically if something got broken when a dependency was changed.
+
+name: react-native-android-build-apk
+on: [push, pull_request]
+
+jobs:
+  BuildAndroidDebug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update || true
+          sudo apt-get install -y libsecret-1-dev
+          
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          # cache: 'yarn'
+
+      - name: Install Yarn
+        run: |
+          corepack enable
+
+      - name: Install
+        run:  yarn install
+
+      - name: Build Android Release
+        run: ./gradlew assembleDebug
