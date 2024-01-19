@@ -1,28 +1,26 @@
-# The goal of this action is to compile the Android debug build. That should
-# tell us automatically if something got broken when a dependency was changed.
+name: Build Android
 
-name: react-native-android-build-apk
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  BuildAndroidDebug:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 11
-      uses: actions/setup-java@v3.13.0
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-        cache: gradle
-    - name: Setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 21.2.0
-        cache: npm
-    - name: Install
-      run: npm ci
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Android
+        run: |
+          npx react-native run-android --variant=release
