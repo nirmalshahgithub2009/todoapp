@@ -24,4 +24,4 @@ jobs:
 
       - name: Build Android
         run: |
-          npx react-native run-android --variant=release
+          npx react-native run-android --release
